@@ -1,29 +1,6 @@
 const express = require('express');
-const https = require('https');
-
-const PORT = 8080;
-
-let URL = 'https://express.heartrails.com/api/json?method=getStations&line=東急田園都市線';
-
 const app = express();
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }));
-app.set("view engine", "ejs");
-app.use("/public", express.static(__dirname + "/public"));
-
-app.get('/', (req, expressResult) => {
-  https.get(URL, httpResult => {
-    let body = '';
-    httpResult.on('data', chunk => {
-      body += chunk;
-    });
-    httpResult.on('end', res => {
-      stationsInLine = JSON.parse(body).response.station;
-      let stations = stationsInLine.map(s => s.name);
-      expressResult.render('top.ejs', { stations: stations });
-    });
-  });
-});
+const PORT = 8080;
 
 class Product {
   constructor(id, name, price) {
@@ -32,12 +9,6 @@ class Product {
     this.price = price;
   }
 }
-
-let foods = new ProductDB();
-
-foods.add("ポッキー", 280);
-foods.add("きのこの山", 190);
-foods.add("たけのこの里", 190);
 
 class ProductDB {
   constructor() {
@@ -50,5 +21,37 @@ class ProductDB {
     this.productNum++;
   }
 }
+
+let foods = new ProductDB();
+
+foods.add("ポッキー", 280);
+foods.add("きのこの山", 190);
+foods.add("たけのこの里", 190);
+
+app.get('/', (req, res) => {
+  res.contentType('json');
+  res.header('Access-Control-Allow-Origin', '*');
+  res.send({ result: foods.length, data: foods });
+});
+
+app.get('/request', (req, res) => {
+  let result = { err: "", result: 0, data: [] }
+  res.contentType('json');
+  res.header('Access-Control-Allow-Origin', '*');
+  
+  if(req.query.cmd = "all"){
+    res.send({ result: foods.length, data: foods });
+  }
+  
+  if(req.query.cmd = "search"){
+    foods.products.forEach(e => {
+      if (e.name == req.query.name) {
+        result.result++;
+        result.data.push(e);
+      }
+    });
+    res.send(result);
+  }
+});
 
 app.listen(process.env.PORT || PORT);

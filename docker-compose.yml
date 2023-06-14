@@ -3,7 +3,7 @@ version: '3.5'
 services:
   app:
     build: .
-    container_name: products
+    container_name: pro_ducts
     working_dir: /usr/src/app
     environment:
       TZ: "Asia/Tokyo"
