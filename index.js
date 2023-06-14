@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/request', (req, res) => {
-  let result = { err: "", result: 0, data: [] }
+  let result = { err: "search name not specified", result: 0, data: [] }
   res.contentType('json');
   res.header('Access-Control-Allow-Origin', '*');
   
@@ -53,6 +53,18 @@ app.get('/request', (req, res) => {
     res.send({ result: foods.length, data: foods });
   }
 
+});
+
+app.get('/add', (req, res) => {
+  const name = req.query.name;
+  const price = parseInt(req.query.price);
+
+  if (name && price) {
+    foods.add(name, price);
+    res.send({ result: "Success" });
+  } else {
+    res.send({ result: "Invalid data" });
+  }
 });
 
 app.listen(process.env.PORT || PORT);
