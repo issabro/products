@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/request', (req, res) => {
-  let result = { err: "search name not specified", result: 0, data: [] }
+  let result = { err: "", result: 0, data: [] }
   res.contentType('json');
   res.header('Access-Control-Allow-Origin', '*');
   
