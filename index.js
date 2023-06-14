@@ -39,10 +39,6 @@ app.get('/request', (req, res) => {
   res.contentType('json');
   res.header('Access-Control-Allow-Origin', '*');
   
-  if(req.query.cmd = "all"){
-    res.send({ result: foods.length, data: foods });
-  }
-  
   if(req.query.cmd = "search"){
     foods.products.forEach(e => {
       if (e.name == req.query.name) {
@@ -52,6 +48,11 @@ app.get('/request', (req, res) => {
     });
     res.send(result);
   }
+
+  if(req.query.cmd = "all"){
+    res.send({ result: foods.length, data: foods });
+  }
+
 });
 
 app.listen(process.env.PORT || PORT);
